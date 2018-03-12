@@ -2,6 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cc.mivisi.maven</groupId>
   <artifactId>common_parent</artifactId>
+  
+  
+  
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 </project>
