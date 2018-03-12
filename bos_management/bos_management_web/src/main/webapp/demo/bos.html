@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>easyUI zTree</title>
+<link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+	
+<link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+
+<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript">
+		function selectPanel(){
+			$.messager.prompt('Prompt','Please enter the panel title:',function(s){
+				if (s){
+					$('#aa').accordion('select',s);
+				}
+			});
+		}
+		var idx = 1;
+		function addPanel(){
+			$('#aa').accordion('add',{
+				title:'Title'+idx,
+				content:'<div style="padding:10px">Content'+idx+'</div>'
+			});
+			idx++;
+		}
+		function removePanel(){
+			var pp = $('#aa').accordion('getSelected');
+			if (pp){
+				var index = $('#aa').accordion('getPanelIndex',pp);
+				$('#aa').accordion('remove',index);
+			}
+		}
+	</script>
+
+</head>
+
+<body class="easyui-layout">
+	
+    <div data-options="region:'north'" style="height:100px;"">
+    		<div>
+				<img src="../images/logo.png" border="0">
+			</div>
+	
+    </div>   
+    <div data-options="region:'south',stitle:'south',plit:true" style="height:50px;">
+
+    </div>   
+    <!-- 菜单导航 -->
+ <div data-options="region:'west',title:'菜单导航',split:true" style="width:190px;">
+ <div id="aa" class="easyui-accordion" data-options="split:true,fit:true">
+		<div title="基本查询" data-options="iconCls:'icon-mini-add'">
+			
+		</div>
+		<div title="系统管理" data-options="iconCls:'icon-mini-add'"  >
+			
+		</div>
+	</div>
+	
+</div>
+
+
+
+</div>  
+    
+    
+    </div>   
+    <div data-options="region:'center'" style="padding:5px;background:#eee;"></div>   
+</body>  
+
+
+</html>
