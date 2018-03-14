@@ -8,5 +8,14 @@
   	<module>bos_management_domain</module>
   	<module>bos_management_dao</module>
   	<module>bos_management_service</module>
+  	<module>bos_management_web</module>
   </modules>
+  <dependencies>
+  	<dependency>
+  		<groupId>cc.mivisi.maven</groupId>
+  		<artifactId>common_parent</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  		<type>pom</type>
+  	</dependency>
+  </dependencies>
 </project>
