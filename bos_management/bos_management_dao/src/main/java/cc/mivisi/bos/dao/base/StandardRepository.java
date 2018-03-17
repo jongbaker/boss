@@ -17,6 +17,7 @@ import cc.mivisi.bos.domain.Standard;
  */
 //泛型1:封装数据对象的类型
 //类型2:对象主键的类型
+//难道是simmplejpa来执行的吗.
 public interface StandardRepository extends JpaRepository<Standard, Long>{
 	
 	//SpringDataJPA 提供了一套命名规范

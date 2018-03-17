@@ -2,6 +2,7 @@ package cc.mivisi.bos.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 public class SubArea {
 
     @Id
+    @GeneratedValue
     @Column(name = "C_ID")
     private Long id;
     @Column(name = "C_START_NUM")
@@ -98,5 +100,12 @@ public class SubArea {
     public void setFixedArea(FixedArea fixedArea) {
         this.fixedArea = fixedArea;
     }
+
+	@Override
+	public String toString() {
+		return "SubArea [id=" + id + ", startNum=" + startNum + ", endNum=" + endNum + ", single=" + single
+				+ ", keyWords=" + keyWords + ", assistKeyWords=" + assistKeyWords + ", area=" + area + ", fixedArea="
+				+ fixedArea + "]";
+	}
 
 }
