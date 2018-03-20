@@ -65,6 +65,14 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 
+	@Override
+	public void register(Customer customer) {
+		  
+		// TODO Auto-generated method stub  
+		customerJpaRepository.save(customer);
+	}
+
+
 
 	
 }
