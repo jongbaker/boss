@@ -104,6 +104,23 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
 		return SUCCESS;
 	}
 	
+	private Long courierId;
+	private Long takeTimeId;
+	public void setTakeTimeId(Long takeTimeId) {
+		this.takeTimeId = takeTimeId;
+	}
+	public void setCourierId(Long courierId) {
+		this.courierId = courierId;
+	}
+	
+	@Action(value="fixedAreaAction_associationCourierToFixedArea",results={@Result(name="success",location="/pages/base/fixed_area.html",type="redirect")})
+	public String associationCourierToFixedArea(){
+		Long id = getModel().getId();
+		System.out.println(id);
+		fixedAreaService.associationCourierToFixedArea(id,courierId,takeTimeId);
+		
+		return SUCCESS;
+	}
 	
 
 	

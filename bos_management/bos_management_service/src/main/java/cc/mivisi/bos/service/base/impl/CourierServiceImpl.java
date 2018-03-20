@@ -1,5 +1,7 @@
 package cc.mivisi.bos.service.base.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -63,12 +65,15 @@ public class CourierServiceImpl implements CourierService {
 	//带有条件的findAll
 	@Override
 	public Page<Courier> findAll(Specification<Courier> specification, Pageable pageable) {
-		System.out.println(courierReposity);
-		System.out.println(specification);
-		System.out.println(pageable);
-		
+	
 		
 		return courierReposity.findAll(specification, pageable);
+	}
+
+	@Override
+	public List<Courier> findByDeltagIsNotNull() {
+		  
+		return	courierReposity.findByDeltagIsNotNull();
 	}
 
 }

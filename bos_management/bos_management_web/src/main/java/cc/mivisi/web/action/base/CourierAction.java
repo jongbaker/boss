@@ -22,6 +22,7 @@ import org.bouncycastle.jce.provider.JDKDSASigner.noneDSA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -47,7 +48,15 @@ import net.sf.json.JsonConfig;
 @ParentPackage("struts-default")
 @Controller
 @Scope("prototype")
-public class CourierAction extends ActionSupport implements ModelDriven<Courier> {
+public class CourierAction extends CommonAction<Courier> {
+	public CourierAction() {
+		  
+		super(Courier.class);  
+		
+		
+	}
+
+
 	@Autowired
 	private CourierService courierService;
 	
@@ -75,14 +84,7 @@ public class CourierAction extends ActionSupport implements ModelDriven<Courier>
 	}
 
 
-	private int page;
-	private int rows;
-	public void setPage(int page) {
-		this.page = page;
-	}
-	public void setRows(int rows) {
-		this.rows = rows;
-	}
+
 	
 	//Ajax不需要跳转页面
 	@Action("courierAction_pageQuery")
@@ -202,6 +204,80 @@ public class CourierAction extends ActionSupport implements ModelDriven<Courier>
 		courierService.del(ids);
 		return NONE;
 	}
+	
+	@Action("courierAction_listajax")
+	public String findAll() throws IOException{
+		
+		System.out.println("courierAction_listajax.....come..........");
+		Specification<Courier> specification = new Specification<Courier>() {
+
+			@Override
+			public Predicate toPredicate(Root<Courier> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				  
+				 /**CriteriaBuilder  ------------一个构建安全查询者
+	             * 创建一个查询的where语句
+	             * 
+	             * @param root : 根对象.可以简单的认为就是泛型对象----------------important
+	             * @param cb : 构建查询条件--------------------------------------important
+	             * @return a {@link Predicate}, must not be {@literal null}.
+	             */
+				//查询所有的在职的快递员
+				//比较空值
+				//判断表达式是否为空------记住固定写法
+				//1.创建一个对应于被引用属性的路径。---源码
+				//2. 对表达式执行一个类型转换，返回一个新的表达式对象 
+				//Perform a typecast upon the expression, returning a new  expression object.
+				 
+				Predicate predicate = cb.isNull(root.get("deltag").as(Character.class));
+				return predicate;
+			}
+		};
+		//关于这里为啥传输null,可以看SimpleJpaRepository
+		//return pageable == null ? new PageImpl<T>(query.getResultList()) : readPage(query, pageable, spec);
+		Page<Courier> p = courierService.findAll(specification, null);
+	
+		//Returns the page content as {@link List}.
+		//返回该page的list形式的内容
+		List<Courier> list = p.getContent();
+		System.out.println(list);
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.setExcludes(new String[]{"fixedAreas","takeTime"});
+		
+		list2json(list, jsonConfig);
+		
+		return NONE;
+	}
+	
+	@Action("courierAction_listajax2")
+	public String findAll2() throws IOException{
+		
+		List<Courier> list=courierService.findByDeltagIsNotNull();
+		
+	
+		
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.setExcludes(new String[]{"fixedAreas","takeTime"});
+		
+		list2json(list, jsonConfig);
+		
+		
+		return NONE;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }

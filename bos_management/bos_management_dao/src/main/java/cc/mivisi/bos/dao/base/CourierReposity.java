@@ -1,5 +1,7 @@
 package cc.mivisi.bos.dao.base;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,6 +18,15 @@ public interface CourierReposity extends JpaRepository<Courier, Long>,JpaSpecifi
 	@Modifying
 	@Query("update Courier set deltag=1 where id=?")
 	void updateDelTagById(long l);
+
+
+
+	
+
+
+
+	List<Courier> findByDeltagIsNotNull();
+
 
 }
   

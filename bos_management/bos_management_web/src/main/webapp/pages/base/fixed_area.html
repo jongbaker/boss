@@ -476,28 +476,50 @@
 								<!-- 存放定区编号 -->
 								<input type="hidden" name="id" id="courierFixedAreaId" />
 								<!-- 获取快递员在哪里的action,当然就是在快递员的版块 -->
-								<input data-options="ditable:false, url:'../../courierAction_listajax.action',valueField:'id',textField:'name'"
+								<input data-options="ditable:false, url:'../../courierAction_listajax2.action',valueField:'id',textField:'name'"
 									 type="text" name="courierId" class="easyui-combobox" required="true" />
 							</td>
 						</tr>
 						<tr>
 							<td>选择收派时间</td>
 							<td>
-								<select required="true" class="easyui-combobox" name="takeTimeId">
+								<!-- <select required="true" class="easyui-combobox" name="takeTimeId">
 									<option>请选择</option>
 									<option value="1">北京早班</option>
 									<option value="2">北京晚班</option>
-								</select>
-								<!-- <input type="text" name="takeTimeId" class="easyui-combobox" required="true" /> -->
+								</select> -->
+								
+							<input data-options="ditable:false, url:'../../takeTimeAction_listajax.action',valueField:'id',textField:'name'"
+									 type="text" name="takeTimeId" class="easyui-combobox" required="true" />
 							</td>
 						</tr>
 						<tr>
 							<td colspan="3">
-								<a id="associationCourierBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联快递员</a>
+								<a id="associationCourierBtn" onclick="associateCourier()" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联快递员</a>
 							 </td>
+							 
 						</tr>
+				
 					</table>
+					<script type="text/javascript">
+						function associateCourier() {
+							var result = $("#grid").datagrid("getSelections");
+							if (result.length==1) {
+								$("#courierWindow").window("open")
+								$("#courierFixedAreaId").val(result[0].id)
+								$("#courierForm").submit();
+							}else{
+								$.messager.alert("警告", "关联快递员,只能（必须）选择一个定区", "warning");
+							}
+							
+							
+							
+						}
+					
+					</script>
 				</form>
+				
+			
 			</div>
 		</div>
 	</body>
