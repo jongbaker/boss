@@ -60,7 +60,47 @@
 				id : 'button-association',
 				text : '关联客户',
 				iconCls : 'icon-sum',
-				handler : doAssociations
+				handler :function (){
+						var flag=$("#grid").datagrid("getSelections");
+						if(flag.length==1){
+							$("#customerWindow").window('open');
+							
+							//采用ajax进行获取数据
+							$.post("../../fixedAreaAction_findCustomerUnAssociated.action",function(result){
+								//针对获取到的数据进行针对性的选择
+								$(result).each(function(index,element){
+									
+									var id=element.id;
+									var username= element.username;
+									var telephone = element.telephone;
+									
+								$("#noassociationSelect").append("<option value='"+id+"'>"+username+"["+telephone+"]</option>")
+								})
+							})
+								
+							var id=flag[0].id;
+							$.post("../../fixedAreaAction_findCustomerAssociated.action","id="+id,function(result){
+								$(result).each(function(index,element){
+									
+									var id=element.id;
+									var username= element.username;
+									var telephone = element.telephone;
+									
+								$("#associationSelect").append("<option value='"+id+"'>"+username+"["+telephone+"]</option>");
+								})
+							})
+				
+							
+							
+							
+							
+							
+						}else{
+							// 没有选中定区，或者选择 了多个定区
+							$.messager.alert("警告","关联,只能（必须）选择一个定区","warning");
+						}
+				}
+			
 			},{
 				id : 'button-association-courier',
 				text : '关联快递员',
@@ -257,6 +297,10 @@
 				});
 				
 			}
+			
+			
+			
+			
 		</script>
 	</head>
 
@@ -364,25 +408,58 @@
 						<tr>
 							<td>
 								<input type="hidden" name="id" id="customerFixedAreaId" />
+								
 								<select id="noassociationSelect" multiple="multiple" size="10"></select>
 							</td>
 							<td>
-								<input type="button" value="》》" id="toRight">
+								<input type="button" value="》》" id="toRight" onclick="moveToRight()">
 								<br/>
-								<input type="button" value="《《" id="toLeft">
+								<input type="button" value="《《" id="toLeft" onclick="moveToLeft()">
 							</td>
+							
 							<td>
 								<select id="associationSelect" name="customerIds" multiple="multiple" size="10"></select>
 							</td>
 						</tr>
 						<tr>
-							<td colspan="3"><a id="associationBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联客户</a> </td>
+							<td colspan="3"><a id="associationBtn" href="#" onclick="associateCustomer2FixedArea()" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联客户</a> </td>
 						</tr>
 					</table>
 				</form>
 			</div>
 		</div>
+		<script type="text/javascript">
 		
+		
+		
+		function moveToRight() {
+			//jquery,这里append表示移动
+			$("#associationSelect").append(
+				$("#noassociationSelect option:selected")
+			)
+		}
+		
+		function moveToLeft() {
+			$("#noassociationSelect").append(
+				$("#associationSelect option:selected")
+			)
+		}
+		
+		
+		function associateCustomer2FixedArea() {
+			var rows = $("#grid").datagrid("getSelections")
+			
+			//使用jQuery对id赋值
+				$("#customerFixedAreaId").val(rows[0].id);			
+			//提交的时候吧右侧全都选中,提交.--也就是把右侧的属性全都设置为selected
+			$("#associationSelect option").prop("selected","selected");
+			
+			$("#customerForm").submit()
+			
+			
+		}
+		
+		</script>
 		<!-- 关联快递员窗口 -->
 		<div class="easyui-window" title="关联快递员窗口" id="courierWindow" modal="true"
 			collapsible="false" closed="true" minimizable="false" maximizable="false" style="top:20px;left:200px;width: 700px;height: 300px;">
@@ -398,6 +475,7 @@
 							<td>
 								<!-- 存放定区编号 -->
 								<input type="hidden" name="id" id="courierFixedAreaId" />
+								<!-- 获取快递员在哪里的action,当然就是在快递员的版块 -->
 								<input data-options="ditable:false, url:'../../courierAction_listajax.action',valueField:'id',textField:'name'"
 									 type="text" name="courierId" class="easyui-combobox" required="true" />
 							</td>

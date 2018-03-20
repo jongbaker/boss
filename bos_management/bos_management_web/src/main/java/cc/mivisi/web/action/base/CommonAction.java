@@ -72,6 +72,7 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
 	}
 
 	
+	//toJson采用的是JSONObject.fromObject  采用的是对象是(map或者javabean)
 	public void toJons(JsonConfig jsonConfig ,Page<T> page) throws IOException{
 		
 		// 总数据条数
@@ -85,7 +86,7 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
 		map.put("rows", list);
 		
 		String json;
-			//jsonconfig有可能为空,那么就会在内部进行计算的时候,会发生空指针,所以需要进行判断
+			//jsonconfig有可能为空,那么就会在内部进行计算的时候,会发生空指针,所以需要进行判断---看原码
 		if (jsonConfig != null) {
 			json = JSONObject.fromObject(map, jsonConfig).toString();
 		} else {
@@ -97,8 +98,12 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
 		response.getWriter().write(json);
 	}
 	
-	public void list2json(List<T> list,JsonConfig jsonConfig) throws IOException{
+	
+	//list2json采用的JSONArray.fromObject-------必须是(java的数组或者list)
+	public void list2json(List list,JsonConfig jsonConfig) throws IOException{
 		String json;
+		
+		//查看源码可以知道,需要对即送进行判断,否则是jsonconfig是空的时候,那么就会空指针
         if (jsonConfig != null) {
             json = JSONArray.fromObject(list, jsonConfig).toString();
         } else {
