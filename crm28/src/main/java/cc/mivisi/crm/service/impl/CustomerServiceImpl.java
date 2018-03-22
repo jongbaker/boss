@@ -73,6 +73,31 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 
+	@Override
+	public void active(String telephone) {
+		  System.out.println(telephone);
+		// TODO Auto-generated method stub  
+		customerJpaRepository.active(telephone);
+	}
+
+
+	@Override
+	public Customer checkActive(String telephone) {
+		  
+		
+		return customerJpaRepository.checkActive(telephone);
+	}
+
+
+	@Override
+	public Customer findByTelephoneAndPassword(String telephone, String password) {
+		  System.out.println("telephone"+telephone+"password"+password);
+		// TODO Auto-generated method stub  
+		return customerJpaRepository.findByTelephoneAndPassword(telephone,password);
+	}
+	
+
+
 
 	
 }

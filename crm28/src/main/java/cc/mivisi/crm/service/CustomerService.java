@@ -45,5 +45,17 @@ public interface CustomerService {
 		@POST
 		@Path("/register")
 		public void register(Customer customer);
+		
+		@PUT
+		@Path("/active")
+		public void active(@QueryParam("telephone")String telephone);
+		
+		@GET
+		@Path("/checkActive")
+		public Customer checkActive(@QueryParam("telephone")String telephone);
+		
+		@GET
+		@Path("/login")
+		public Customer findByTelephoneAndPassword(@QueryParam("telephone")String telephone,@QueryParam("password")String password);
 }
   
