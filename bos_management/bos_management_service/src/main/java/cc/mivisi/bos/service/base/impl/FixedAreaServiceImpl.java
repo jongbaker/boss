@@ -1,7 +1,9 @@
 package cc.mivisi.bos.service.base.impl;
 
 import java.util.List;
+import java.util.Set;
 
+import org.bouncycastle.jce.provider.JDKDSASigner.noneDSA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cc.mivisi.bos.dao.base.CourierReposity;
 import cc.mivisi.bos.dao.base.FixedJpaRepository;
+import cc.mivisi.bos.dao.base.SubAreaJpaRepository;
 import cc.mivisi.bos.dao.base.TakeTimeRepository;
 import cc.mivisi.bos.domain.Courier;
 import cc.mivisi.bos.domain.FixedArea;
+import cc.mivisi.bos.domain.SubArea;
 import cc.mivisi.bos.domain.TakeTime;
 import cc.mivisi.bos.service.base.FixedAreaService;
 
@@ -30,8 +34,9 @@ public class FixedAreaServiceImpl implements FixedAreaService {
 	private CourierReposity courierReposity;
 	@Autowired
 	private TakeTimeRepository takeTimeRepository;
+	@Autowired
+	private SubAreaJpaRepository subAreaJpaRepository;
 	
-
 	@Override
 	public Page<FixedArea> findAll(Pageable pageable) {
 		  
@@ -55,6 +60,23 @@ public class FixedAreaServiceImpl implements FixedAreaService {
 		
 		//分时间,让多的一方管理
 		courier.setTakeTime(takeTime);
+	}
+
+	@Override
+	public void associationSubArea2FixedArea(Long id, Long[] customerIds) {
+		//采用持久态的思想.  
+		FixedArea fixedArea = fixedJpaRepository.findOne(id);
+		Set<SubArea> subareas = fixedArea.getSubareas();
+		for (SubArea subArea : subareas) {
+			subArea.setArea(null);
+		}
+		
+		for (Long subAreaId : customerIds) {
+			SubArea subArea = subAreaJpaRepository.findOne(subAreaId);
+			subArea.setFixedArea(fixedArea);
+		}
+		
+		
 	}
 }
   

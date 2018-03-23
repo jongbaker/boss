@@ -122,6 +122,12 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
 		return SUCCESS;
 	}
 	
+	@Action(value="FixedAreaAction_associationSubArea2FixedArea",results={@Result(name="success",location="/pages/base/fixed_area.html",type="redirect")})
+	public String associationSubArea2FixedArea(){
+		
+		fixedAreaService.associationSubArea2FixedArea(getModel().getId(),customerIds);
+		return SUCCESS;
+	}
 
 	
 

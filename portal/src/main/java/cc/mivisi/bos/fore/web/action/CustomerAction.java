@@ -1,5 +1,9 @@
 package cc.mivisi.bos.fore.web.action;
 
+import java.security.GeneralSecurityException;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang.ObjectUtils.Null;
@@ -25,6 +29,8 @@ import com.opensymphony.xwork2.ModelDriven;
 
 import cc.mivisi.bos.fore.domain.Customer;
 import cc.mivisi.bos.fore.utils.MailUtils;
+import cc.mivisi.bos.fore.utils.MailUtils_163;
+import cc.mivisi.bos.fore.utils.WebMailUtil;
 import cc.mivisi.utils.SmsUtils;
 
 /**
@@ -83,7 +89,7 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
 	@Action(value = "customerAction_regist", results = {
 			@Result(name = "success", location = "/signup-success.html", type = "redirect"),
 			@Result(name = "error", location = "/signup-fail.html", type = "redirect") })
-	public String regist() {
+	public String regist() throws AddressException, MessagingException, GeneralSecurityException {
 		String code = (String) ServletActionContext.getRequest().getSession().getAttribute("code");
 		if (code.equals(checkcode)) {
 			WebClient.create("http://localhost:8180/crm28/webService/customerService/register")
@@ -98,7 +104,9 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
 					+ "&telephone=" + model.getTelephone();
 			// 发送到邮箱需要携带什么信息
 			MailUtils.sendMail(model.getEmail(), "激活邮件", "感谢您注册本网站,请在24小时之内<a href='" + url + "'>激活</a>");
-
+			//WebMailUtil.sendMail(model.getEmail(), "激活邮件", "感谢您注册本网站,请在24小时之内<a href='" + url + "'>激活</a>");
+			MailUtils_163.sendMail("jongbaker@126.com", "active", "激活");
+			MailUtils_163.sendMail(model.getEmail(), "激活邮件", "感谢您注册本网站,请在24小时之内<a href='" + url + "'>激活</a>");
 			return SUCCESS;
 		}
 		return ERROR;

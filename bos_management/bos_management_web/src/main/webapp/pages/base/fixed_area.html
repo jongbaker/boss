@@ -32,7 +32,49 @@
 			}
 			
 			function doAssociations(){
-				$('#customerWindow').window('open');
+			    var result = $("#grid").datagrid("getSelections");
+			    if(result.length==1){
+                      $("#subAreaWindow").window('open');
+                     /* 宸︿晶,ajax*/
+                      $.post("../../subAreaAction_unAssociation.action",function(result){
+                    	  $("#noAssociationSubAreaSelect").html("");
+                            $(result).each(function(index,element){
+                            /* 	var id = $(element).id;   错误写法,element就是遍历出来的json,不需要当做jQuery对象
+                            	var name = $(element).keyWords; */
+                            	var id = element.id;
+                            	var name = element.keyWords;
+                            	$("#noAssociationSubAreaSelect").append("<option value='"+id+"'>"+name+"</option>")
+                            	
+                            })
+                      })
+                         
+                         
+                         /* 绑定了的 */
+                         
+                        var id = result[0].id;
+                      $.post("../../subAreaAction_Association.action","id="+id,function(result){
+                    	  $("#AssociationSubAreaSelect").html("");
+                            $(result).each(function(index,element){
+                               	var id = element.id;
+                            	var name = element.keyWords;
+                            	$("#AssociationSubAreaSelect").append("<option value='"+id+"'>"+keyWords+"</option>")
+                            	
+                            })
+                      })
+                         
+                         
+                         
+                         
+                         
+                         
+                         
+			    }else{
+			        //icon：显示的图标图像。可用值有：error,question,info,warning。
+			        $.messager.alert('温馨提示','请选择一个或者不要选择多个！','warning');
+			    }
+			    
+			    
+				
 			}
 			
 			//工具栏
@@ -453,11 +495,68 @@
 				$("#customerFixedAreaId").val(rows[0].id);			
 			//提交的时候吧右侧全都选中,提交.--也就是把右侧的属性全都设置为selected
 			$("#associationSelect option").prop("selected","selected");
-			
 			$("#customerForm").submit()
-			
-			
 		}
+		
+		</script>
+		<!-- 关联定区-->
+        <div modal="true" class="easyui-window" title="关联分区窗口" id="subAreaWindow" collapsible="false" closed="true" minimizable="false" maximizable="false" style="top:20px;left:200px;width: 400px;height: 300px;">
+            <div style="overflow:auto;padding:5px;" border="false">
+                <form id="subAreaForm" action="../../FixedAreaAction_associationSubArea2FixedArea.action" method="post">
+                    <table class="table-edit" width="80%" align="center">
+                        <tr class="title">
+                            <td colspan="3">关联分区</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                  <!-- 选中的id -->
+                                <input type="hidden" name="id" id="customerSubAreaId" />
+                                
+                                <select id="noAssociationSubAreaSelect" multiple="multiple" size="10"></select>
+                            </td>
+                            <td>
+                                <input type="button" value="》》" id="toSubAreaRight" onclick="moveSubAreaToRight()">
+                                <br/>
+                                <input type="button" value="《《" id="toSubAreaLeft" onclick="moveSubAreaToLeft()">
+                            </td>
+                            
+                            <td>
+                                <select id="AssociationSubAreaSelect" name="customerIds" multiple="multiple" size="10"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><a id="associationSubAreaBtn" href="#" onclick="associateSubArea2FixedArea()" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联分区</a> </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+		<script type="text/javascript">
+		function moveSubAreaToRight() {
+			$("#AssociationSubAreaSelect").append(
+				$("#noAssociationSubAreaSelect option:selected")		
+			);
+		}
+		function moveSubAreaToLeft() {
+			$("#noAssociationSubAreaSelect").append(
+					$("#AssociationSubAreaSelect option:selected")		
+				);
+		}
+		
+		function associateSubArea2FixedArea() {
+			
+			var flag=$("#grid").datagrid("getSelections");
+			var id=flag[0].id;
+			$("#AssociationSubAreaSelect option").prop("selected","selected");
+			$("#customerSubAreaId").val(id);
+			$("#subAreaForm").submit();
+		}
+		
+		
+		
+		
+		
+		
 		
 		</script>
 		<!-- 关联快递员窗口 -->

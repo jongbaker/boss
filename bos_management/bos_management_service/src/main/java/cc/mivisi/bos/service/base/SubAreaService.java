@@ -1,5 +1,10 @@
 package cc.mivisi.bos.service.base;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import cc.mivisi.bos.domain.SubArea;
 
 /**  
@@ -10,6 +15,14 @@ import cc.mivisi.bos.domain.SubArea;
 public interface SubAreaService {
 
 	void save(SubArea model);
+
+	Page<SubArea> findAll(Pageable pageable);
+
+	List<SubArea> findUnAssociation();
+
+	List<SubArea> findAssociation(Long id);
+
+	void associationSubArea2FixedArea(Long id, Long[] customerIds);
 
 }
   

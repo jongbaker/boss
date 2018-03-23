@@ -95,6 +95,14 @@ public class CustomerServiceImpl implements CustomerService{
 		// TODO Auto-generated method stub  
 		return customerJpaRepository.findByTelephoneAndPassword(telephone,password);
 	}
+
+
+	@Override
+	public String findFixedAreaIdByAddress(String address) {
+		  
+		// TODO Auto-generated method stub  
+		return customerJpaRepository.findFixedAreaIdByAddress(address);
+	}
 	
 
 

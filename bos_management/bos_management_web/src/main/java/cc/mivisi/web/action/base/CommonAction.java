@@ -109,6 +109,7 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
         } else {
             json = JSONArray.fromObject(list).toString();
         }
+        System.out.println(json);
         HttpServletResponse response = ServletActionContext.getResponse();
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(json);

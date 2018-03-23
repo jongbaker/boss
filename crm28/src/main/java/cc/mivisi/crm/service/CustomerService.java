@@ -57,5 +57,9 @@ public interface CustomerService {
 		@GET
 		@Path("/login")
 		public Customer findByTelephoneAndPassword(@QueryParam("telephone")String telephone,@QueryParam("password")String password);
+		
+		@GET
+		@Path("/getFixedArea")
+		public String findFixedAreaIdByAddress(@QueryParam("address")String address);
 }
   
