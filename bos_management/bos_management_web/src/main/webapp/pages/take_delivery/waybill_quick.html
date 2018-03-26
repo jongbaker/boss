@@ -153,6 +153,15 @@
 					onAfterEdit : function(rowIndex, rowData, changes){
 						console.info(rowData);
 						editIndex = undefined;
+						//提交数据到数据库
+						$.post(../../waybillAction_save.action),
+						rowDate,
+						function(data){
+							if(data=='0'){
+								$.message.alert('警告',"录入失败","warning")
+							}
+							
+						}
 					}
 				});
 			});

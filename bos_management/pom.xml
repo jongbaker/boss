@@ -17,4 +17,5 @@
   	<artifactId>common_parent</artifactId>
   	<version>0.0.1-SNAPSHOT</version>
   </parent>
+  <groupId>cc.mivisi.maven</groupId>
 </project>

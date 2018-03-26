@@ -2,11 +2,14 @@ package cc.mivisi.bos.fore.web.action;
 
 import java.security.GeneralSecurityException;
 
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.Session;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.commons.lang.ObjectUtils.Null;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -15,23 +18,19 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
-import org.junit.Test;
-import org.omg.PortableInterceptor.ACTIVE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
-import com.aliyuncs.exceptions.ClientException;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
 import cc.mivisi.bos.fore.domain.Customer;
 import cc.mivisi.bos.fore.utils.MailUtils;
 import cc.mivisi.bos.fore.utils.MailUtils_163;
-import cc.mivisi.bos.fore.utils.WebMailUtil;
-import cc.mivisi.utils.SmsUtils;
 
 /**
  * ClassName:CustomerAction <br/>
@@ -43,7 +42,9 @@ import cc.mivisi.utils.SmsUtils;
 @Controller
 @Scope("prototype")
 public class CustomerAction extends ActionSupport implements ModelDriven<Customer> {
-
+    @Autowired
+    private JmsTemplate jmsTemplate;
+    
 	private Customer model;
 
 	@Override
@@ -63,9 +64,21 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
 
 	@Action("customerAction_sendSms")
 	public String sendSms() {
-		String code = RandomStringUtils.randomNumeric(6);
+		final String code = RandomStringUtils.randomNumeric(6);
 		try {
 			// SmsUtils.sendSms(telephone, checkcode);
+			
+			//发送验证码
+			jmsTemplate.send("sms_message", new MessageCreator() {
+                
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+                        MapMessage mapMessage = session.createMapMessage();
+                        mapMessage.setString("telephone", model.getTelephone());
+                        mapMessage.setString("code", code);
+                    return mapMessage;
+                }
+            });
 			System.out.println("code------------" + code);
 			ServletActionContext.getRequest().getSession().setAttribute("code", code);
 
