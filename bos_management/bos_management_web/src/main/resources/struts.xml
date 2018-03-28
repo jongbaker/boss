@@ -2,11 +2,13 @@
 	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 <struts>
-	<package name="user" namespace="/" extends="struts-default">
-		<action name="user_*" class="cc.mivisi.web.action.UserAction" method="{1}">
-			<result>
-				/result.jsp
-			</result>
-		</action>
-	</package>
+
+<constant name="struts.multipart.maxSize" value="200000000"></constant>
+
+<package name="base" extends="struts-default" namespace="/" abstract="true">
+	<action name="user_*" class="cc.mivisi.web.action.base.system.UserAction" method="{1}">
+		
+	</action>
+	
+</package>
 </struts>

@@ -3,6 +3,8 @@ package cc.mivisi.bos.service.base.impl;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +48,8 @@ public class CourierServiceImpl implements CourierService {
 	
 	
 	
-	
+	//授权删除--需要进行开启cglib代理
+	@RequiresPermissions("courier_delete")
 	@Override
 	public void del(String ids) {
 		  

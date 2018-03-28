@@ -14,6 +14,17 @@
 	</welcome-file-list>
 
 
+
+	
+	<filter>
+		<filter-name>shirofilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>shirofilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<!-- webService的servlet.cxf框架 -->
 	
 	<servlet>
