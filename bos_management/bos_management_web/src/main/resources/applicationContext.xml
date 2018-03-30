@@ -101,15 +101,16 @@
 		<!-- 最后存到了filterChainDefinitionMap -->
 		<property name="filterChainDefinitions">
 			<value>
-				/**=anon
-				<!-- /css/*=anon
+			
+				/css/*=anon
 				/data/*=anon
 				/images/*=anon
 				/js/*=anon
 				/validatecode.jsp*=anon
 				/userAction_Login.action=anon
 				/courierAction_pageQuery.action=perms["courier"]
-				/** = authc -->
+				/** = authc
+				/**=anon
 			</value>
 		</property>
 	</bean>

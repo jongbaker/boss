@@ -1,5 +1,8 @@
 package cc.mivisi.web.action.base.system;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -14,11 +17,16 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 
 import cc.mivisi.bos.domain.system.User;
+import cc.mivisi.bos.service.system.UserService;
 import cc.mivisi.web.action.base.CommonAction;
+import net.sf.json.JsonConfig;
 
 /**  
  * ClassName:UserAction <br/>  
@@ -30,6 +38,9 @@ import cc.mivisi.web.action.base.CommonAction;
 @Controller
 @Scope("prototype")
 public class UserAction extends CommonAction<User> {
+    
+    @Autowired
+    private UserService userService;
 
     public UserAction() {
         super(User.class);  
@@ -87,10 +98,45 @@ public class UserAction extends CommonAction<User> {
             }
             
         }
-        System.out.println("nnnnnnnnnnnnnnnnnnnnn");
         
         return LOGIN;
     }
+    
+    @Action(value="userAction_logout",results={@Result(name="success",location="/login.html",type="redirect")})
+    public String logout(){
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return SUCCESS;
+    }
+    
+    
+    private Long[] roleIds;
+    public void setRoleIds(Long[] roleIds) {
+        this.roleIds = roleIds;
+    }
+    
+    
+    @Action(value="userAction_save",results={@Result(name="sucess",location="/pages/system/userlist.html",type="redirect")})
+    public String save(){
+            
+        userService.save(getModel(),roleIds);
+        return SUCCESS;
+    }
+    
+    @Action("userActin_pageQuery")
+    public String pageQuery() throws IOException{
+        PageRequest pageable = new PageRequest(page-1, rows);
+        
+        Page<User> pages=userService.findAll(pageable);
+        
+        List<User> list = pages.getContent();
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[]{"roles"});
+        
+        list2json(list, jsonConfig);
+        return NONE;
+    }
+    
 
 }
   

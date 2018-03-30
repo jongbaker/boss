@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -35,7 +36,7 @@ public class Menu {
     @ManyToMany(mappedBy = "menus")
     private Set<Role> roles = new HashSet<Role>(0);
 
-    @OneToMany(mappedBy = "parentMenu")
+    @OneToMany(mappedBy = "parentMenu",fetch=FetchType.EAGER)
     private Set<Menu> childrenMenus = new HashSet<Menu>();
 
     @ManyToOne
@@ -65,6 +66,7 @@ public class Menu {
     public void setPage(String page) {
         this.page = page;
     }
+
 
     public Integer getPriority() {
         return priority;
@@ -105,5 +107,19 @@ public class Menu {
     public void setParentMenu(Menu parentMenu) {
         this.parentMenu = parentMenu;
     }
+    
+    public Set<Menu>  getChildren(){
+        
+        return childrenMenus;
+    }
+    
+    public String getText(){
+        return name;
+    }
+    
+    
+    
+    
+    
 
 }
