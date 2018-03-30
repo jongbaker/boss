@@ -59,8 +59,7 @@ public class RoleAction extends CommonAction<Role> {
         return NONE;
     }
 
-    @Action(value = "roleAction_save", results = {
-            @Result(name = "success", location = "/pages/system/role.html", type = "redirect")})
+    @Action(value = "roleAction_save", results = {@Result(name = "success", location = "/pages/system/role.html", type = "redirect")})
     public String save() {
 
         roleService.save(getModel(), ids, permissionIds);

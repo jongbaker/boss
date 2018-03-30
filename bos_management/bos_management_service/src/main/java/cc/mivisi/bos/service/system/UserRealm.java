@@ -74,15 +74,7 @@ public class UserRealm extends AuthorizingRealm {
             for (Permission permission : permissions) {
                 info.addStringPermission(permission.getKeyword());
             }
-            
-            
-          
         }
-        
-        
-        
-        
-        
         
         return null;
     }

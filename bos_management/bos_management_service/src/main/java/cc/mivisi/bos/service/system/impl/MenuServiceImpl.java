@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cc.mivisi.bos.dao.base.system.MenuJpaRepository;
 import cc.mivisi.bos.domain.system.Menu;
+import cc.mivisi.bos.domain.system.User;
 import cc.mivisi.bos.service.system.MenuService;
 
 /**  
@@ -54,5 +55,16 @@ public class MenuServiceImpl implements MenuService {
         return menuJpaRepository.findAll(pageRequest);
     }
 
+    @Override
+    public List<Menu> findbyUser(User user) {
+          
+       if ("admin".equals(user.getUsername())) {
+           return menuJpaRepository.findAll();
+           
+    }else {
+        return menuJpaRepository.findbyUser(user.getId());
+    }
+   
+    }
 }
   

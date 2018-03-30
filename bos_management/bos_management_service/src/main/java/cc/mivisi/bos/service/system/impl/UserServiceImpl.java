@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
       userJpaRepository.save(model);
       //持有瞬时态才会报瞬时态异常
       
-      
+      method01(model, roleIds);
         
     }
     

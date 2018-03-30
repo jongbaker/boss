@@ -51,7 +51,7 @@ public class UserAction extends CommonAction<User> {
         this.checkcode = checkcode;
     }
     
-    @Action(value="userAction_Login",results={
+    @Action(value="userAction_login",results={
             @Result(name="success",location="/index.html",type="redirect"),
             @Result(name="login",location="/login.html",type="redirect")
             })
@@ -116,7 +116,7 @@ public class UserAction extends CommonAction<User> {
     }
     
     
-    @Action(value="userAction_save",results={@Result(name="sucess",location="/pages/system/userlist.html",type="redirect")})
+    @Action(value="userAction_save",results={@Result(name="success",location="/pages/system/userlist.html", type = "redirect")})
     public String save(){
             
         userService.save(getModel(),roleIds);

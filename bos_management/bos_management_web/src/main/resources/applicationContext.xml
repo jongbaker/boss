@@ -48,11 +48,12 @@
 	</bean>
 
 
-	<bean id="transactionManager"  class="org.springframework.orm.jpa.JpaTransactionManager">
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-	
-	<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
+
+	<tx:annotation-driven proxy-target-class="true"
+		transaction-manager="transactionManager" />
 	<!-- 分层扫描 -->
 	<context:component-scan base-package="com.mivisi.bos.web,cc.mivisi.bos.service" />
 
@@ -67,7 +68,7 @@
 		<jaxrs:serviceBeans>
 			<ref bean="orderServiceImpl" />
 		</jaxrs:serviceBeans>
-		
+
 		<jaxrs:inInterceptors>
 			<bean class="org.apache.cxf.interceptor.LoggingInInterceptor"></bean>
 		</jaxrs:inInterceptors>
@@ -76,21 +77,23 @@
 		</jaxrs:outInterceptors>
 	</jaxrs:server>
 
-	<!-- 进行shiro的配置  -->
+	<!-- 进行shiro的配置 -->
 	<!-- 开启cglib代理 -->
 	<!-- 1.把事务注解扫描proxy-target-class 改成ture 决定哪一种袋里 -->
-	<!-- 2.添加bean 开启cglib代理-->
-	<bean id="" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
-		<!--  -->
+	<!-- 2.添加bean 开启cglib代理 -->
+	<bean id=""
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+		<!-- -->
 		<property name="proxyTargetClass" value="true"></property>
 	</bean>
-	
+
 	<!-- 3.配置切面 -->
-	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
 		<!-- 注入 -->
 		<property name="securityManager" ref="securityManager"></property>
 	</bean>
-	
+
 	<bean id="shirofilter" class=" org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager"></property>
 		<property name="loginUrl" value="/login.html"></property>
@@ -101,23 +104,39 @@
 		<!-- 最后存到了filterChainDefinitionMap -->
 		<property name="filterChainDefinitions">
 			<value>
-			
-				/css/*=anon
-				/data/*=anon
-				/images/*=anon
-				/js/*=anon
+				/css/* = anon
+				/data/* = anon
+				/images/* = anon
+				/js/** = anon
+				/validatecode.jsp = anon
+				/userAction_login.action = anon
 				/validatecode.jsp*=anon
-				/userAction_Login.action=anon
 				/courierAction_pageQuery.action=perms["courier"]
 				/** = authc
-				/**=anon
 			</value>
 		</property>
 	</bean>
-	
-	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="realm" ref="userRealm" ></property>
+
+	<!-- 注册缓存管理器 -->
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
 	</bean>
+
+	<!-- 将缓存管理器注入安全管理器 -->
+	<!-- 注册安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- 注册realm -->
+		<property name="realm" ref="userRealm" />
+		<!-- 注入缓存管理器 -->
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+
+
+
+
+
+
+
 
 </beans>
 

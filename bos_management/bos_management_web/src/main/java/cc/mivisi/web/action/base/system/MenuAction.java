@@ -3,6 +3,8 @@ package cc.mivisi.web.action.base.system;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
 import cc.mivisi.bos.domain.system.Menu;
+import cc.mivisi.bos.domain.system.User;
 import cc.mivisi.bos.service.system.MenuService;
 import cc.mivisi.web.action.base.CommonAction;
 import net.sf.json.JsonConfig;
@@ -34,7 +37,8 @@ public class MenuAction extends CommonAction<Menu> {
     @Autowired
     private MenuService menuService;
 
-    public MenuAction() {
+  //TODO
+    public MenuAction() { 
           
         super(Menu.class);  
     }
@@ -74,7 +78,19 @@ public class MenuAction extends CommonAction<Menu> {
         return NONE;
     }
     
-    
-
+    @Action("menuAction_findbyUser")
+    public String findbyUser() throws IOException{
+        
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        
+        List<Menu> list=menuService.findbyUser(user);
+        
+        JsonConfig jsonConfig = new JsonConfig();
+        //排除不需要的字段.
+        jsonConfig.setExcludes(new String[] {"roles", "childrenMenus", "parentMenu","children"});
+            list2json(list, jsonConfig);
+        return NONE;
+    }
 }
   
