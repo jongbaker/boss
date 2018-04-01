@@ -116,9 +116,9 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
 			String url = "http://localhost:8080/portal/customerAction_activeAcount.action?emailcode=" + emailcode
 					+ "&telephone=" + model.getTelephone();
 			// 发送到邮箱需要携带什么信息
-			MailUtils.sendMail(model.getEmail(), "激活邮件", "感谢您注册本网站,请在24小时之内<a href='" + url + "'>激活</a>");
+			//MailUtils.sendMail(model.getEmail(), "激活邮件", "感谢您注册本网站,请在24小时之内<a href='" + url + "'>激活</a>");
 			//WebMailUtil.sendMail(model.getEmail(), "激活邮件", "感谢您注册本网站,请在24小时之内<a href='" + url + "'>激活</a>");
-			MailUtils_163.sendMail("jongbaker@126.com", "active", "激活");
+			//MailUtils_163.sendMail("jongbaker@126.com", "active", "激活");
 			MailUtils_163.sendMail(model.getEmail(), "激活邮件", "感谢您注册本网站,请在24小时之内<a href='" + url + "'>激活</a>");
 			return SUCCESS;
 		}

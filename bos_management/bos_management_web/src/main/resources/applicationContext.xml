@@ -104,7 +104,7 @@
 		<!-- 最后存到了filterChainDefinitionMap -->
 		<property name="filterChainDefinitions">
 			<value>
-				/css/* = anon
+			<!-- 	/css/* = anon
 				/data/* = anon
 				/images/* = anon
 				/js/** = anon
@@ -113,6 +113,8 @@
 				/validatecode.jsp*=anon
 				/courierAction_pageQuery.action=perms["courier"]
 				/** = authc
+				 -->
+				/** = anon
 			</value>
 		</property>
 	</bean>
@@ -130,6 +132,9 @@
 		<!-- 注入缓存管理器 -->
 		<property name="cacheManager" ref="cacheManager" />
 	</bean>
+
+
+
 
 
 

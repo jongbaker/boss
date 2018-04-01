@@ -3,7 +3,12 @@ package cc.mivisi.web.action.base.take_delivery;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.Servlet;
@@ -76,7 +81,6 @@ public class ImageAction extends ActionSupport {
             
         } catch (IOException e) {
               
-            // TODO Auto-generated catch block  
             e.printStackTrace();  
             map.put("error",1 );
             map.put("message", e.getMessage());
@@ -104,6 +108,62 @@ public class ImageAction extends ActionSupport {
         valueStack.set("a", 1);//键值方式,存入值栈
         valueStack.push(1);//直接存到栈顶
         
+    }
+    
+    @Action("imageAction_manager")
+    public String manager() throws IOException{
+        ServletContext servletContext = ServletActionContext.getServletContext();
+        
+        String savePath = "upload";
+        String realPath = servletContext.getRealPath(savePath);
+        
+        File currentPathFile = new File(realPath);
+        
+        String[] fileTypes = new String[]{"gif", "jpg", "jpeg", "png", "bmp"};
+
+      //遍历目录取的文件信息
+      List<Hashtable> fileList = new ArrayList<Hashtable>();
+      
+      //推测current..为file类型的
+      if(currentPathFile.listFiles() != null) {
+          for (File file : currentPathFile.listFiles()) {
+              Hashtable<String, Object> hash = new Hashtable<String, Object>();
+              String fileName = file.getName();
+              if(file.isDirectory()) {
+                  hash.put("is_dir", true);
+                  hash.put("has_file", (file.listFiles() != null));
+                  hash.put("filesize", 0L);
+                  hash.put("is_photo", false);
+                  hash.put("filetype", "");
+              } else if(file.isFile()){
+                  String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+                  hash.put("is_dir", false);
+                  hash.put("has_file", false);
+                  hash.put("filesize", file.length());
+                  hash.put("is_photo", Arrays.<String>asList(fileTypes).contains(fileExt));
+                  hash.put("filetype", fileExt);
+              }
+              hash.put("filename", fileName);
+              hash.put("datetime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(file.lastModified()));
+              fileList.add(hash);
+          }
+      }
+        
+      HttpServletResponse response = ServletActionContext.getResponse();
+        HashMap<String, Object> result = new HashMap<>();
+       String contentPath =ServletActionContext.getServletContext().getContextPath()+"/"+savePath+"/";
+       System.out.println(contentPath);
+      result.put("current_dir_path", contentPath);
+      result.put("file_list", fileList);
+      
+      JSONObject json = JSONObject.fromObject(result);
+      
+      //写出到页面
+      
+      response.setContentType("application/json; charset=UTF-8");
+      response.getWriter().write(json.toString());
+        
+        return NONE;//TODO
     }
     
 }
